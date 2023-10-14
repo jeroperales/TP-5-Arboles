@@ -13,18 +13,21 @@ typedef struct
 typedef struct nodoArbol
 {
     persona dato;
-    struct nodoArbol * izq;
-    struct nodoArbol * der;
+    struct nodoArbol* izq;
+    struct nodoArbol* der;
 } nodoArbol;
 
-// PROTOTIPADO
+// PROTOTYPES
 nodoArbol* inicArbol();
 nodoArbol* crearNodoArbol(persona dato);
 nodoArbol* insertar(nodoArbol* arbol, persona dato);
 persona crearPersona();
+void mostrarArbolInOrder(nodoArbol* arbol);
+void mostrarArbolPreOrder(nodoArbol* arbol);
+void mostrarArbolPostOrder(nodoArbol* arbol);
 int contarTerminal(nodoArbol* arbol);
+int contarGrado1(nodoArbol* arbol);
 int buscar(nodoArbol* arbol, int edad);
-void mostrarArbol(nodoArbol* arbol);
 
 int main()
 {
@@ -50,12 +53,10 @@ int main()
     mostrarArbolInOrder(arbol);
 
     terminales = contarTerminal(arbol);
-    printf("\n\nTERMINALES:");
-    printf("| %i |", terminales);
+    printf("\n\nTERMINALES: | %i |", terminales);
 
     grado1 = contarGrado1(arbol);
-    printf("\n\nNODOS GRADO 1:");
-    printf("| %i |");
+    printf("\n\nNODOS GRADO 1: | %i |");
 
     printf("\n\nINGRESE EDAD A BUSCAR\n");
     scanf("%i", &edad);
@@ -77,11 +78,10 @@ nodoArbol* crearNodoArbol(persona dato)
     aux->dato = dato;
     aux->izq = NULL;
     aux->der = NULL;
-
     return aux;
 }
 
-nodoArbol* insertar(nodoArbol* arbol, persona dato) // ORDENADO POR EDAD
+nodoArbol* insertar(nodoArbol* arbol, persona dato)
 {
     if (arbol != NULL)
     {
@@ -107,7 +107,6 @@ persona crearPersona()
     printf("INGRESE EDAD: \n");
     fflush(stdin);
     scanf("%i", &aux.edad);
-
     return aux;
 }
 
@@ -121,10 +120,29 @@ void mostrarArbolInOrder(nodoArbol* arbol)
     }
 }
 
+void mostrarArbolPreOrder(nodoArbol* arbol)
+{
+    if (arbol != NULL)
+    {
+        printf("| %i |", arbol->dato.edad);
+        mostrarArbolPreOrder(arbol->izq);
+        mostrarArbolPreOrder(arbol->der);
+    }
+}
+
+void mostrarArbolPostOrder(nodoArbol* arbol)
+{
+    if (arbol != NULL)
+    {
+        mostrarArbolPostOrder(arbol->izq);
+        mostrarArbolPostOrder(arbol->der);
+        printf("| %i |", arbol->dato.edad);
+    }
+}
+
 int contarTerminal(nodoArbol* arbol)
 {
     int i = 0;
-
     if (arbol != NULL)
     {
         i = i + contarTerminal(arbol->izq);
@@ -140,12 +158,10 @@ int contarTerminal(nodoArbol* arbol)
 int contarGrado1(nodoArbol* arbol)
 {
     int i = 0;
-
     if (arbol != NULL)
     {
         i = i + contarGrado1(arbol->izq);
         i = i + contarGrado1(arbol->der);
-
         if ((arbol->izq == NULL) ^ (arbol->der == NULL))
         {
             i++;
@@ -157,7 +173,6 @@ int contarGrado1(nodoArbol* arbol)
 int buscar(nodoArbol* arbol, int edad)
 {
     int i = 0;
-
     if (arbol != NULL)
     {
         if (arbol->dato.edad == edad)
@@ -171,4 +186,3 @@ int buscar(nodoArbol* arbol, int edad)
     }
     return i;
 }
-
