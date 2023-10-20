@@ -17,14 +17,30 @@ typedef struct nodoArbol
     struct nodoArbol* der;
 } nodoArbol;
 
+typedef struct nodo
+{
+    persona dato;
+    struct nodo* sig;
+} nodo;
+
+
 // PROTOTYPES
 nodoArbol* inicArbol();
 nodoArbol* crearNodoArbol(persona dato);
 nodoArbol* insertar(nodoArbol* arbol, persona dato);
+
+///FUNCIONES LISTA
+nodo* inicLista();
+nodo* crearNodo(persona dato);
+nodo* agregarPpio(nodo* lista, nodo* nuevo);
+nodo* agregarFinal(nodo* lista, nodo* nuevo);
+nodo* pasarALista(nodoArbol* arbol, nodo* lista);
+
 persona crearPersona();
 void mostrarArbolInOrder(nodoArbol* arbol);
 void mostrarArbolPreOrder(nodoArbol* arbol);
 void mostrarArbolPostOrder(nodoArbol* arbol);
+void mostrarLista(nodo* lista);
 int contarTerminal(nodoArbol* arbol);
 int contarGrado1(nodoArbol* arbol);
 int buscar(nodoArbol* arbol, int edad);
@@ -37,7 +53,7 @@ int main()
     int edad = 0;
     char opc = 's';
     nodoArbol* arbol = inicArbol();
-    nodoArbol* nodo;
+    nodo* lista = inicLista();
     persona personita;
 
     while (opc == 's')
@@ -50,20 +66,24 @@ int main()
         scanf("%c", &opc);
     }
 
+    //PUNTO 2
     mostrarArbolInOrder(arbol);
 
-    terminales = contarTerminal(arbol);
+    /*terminales = contarTerminal(arbol);
     printf("\n\nTERMINALES: | %i |", terminales);
 
     grado1 = contarGrado1(arbol);
-    printf("\n\nNODOS GRADO 1: | %i |");
+    printf("\n\nNODOS GRADO 1: | %i |", grado1);
 
     printf("\n\nINGRESE EDAD A BUSCAR\n");
     scanf("%i", &edad);
 
     flag = buscar(arbol, edad);
-    printf("\nFLAG = %d", flag);
+    printf("\nFLAG = %d", flag);*/
 
+    //PUNTO 3
+    lista = pasarALista(arbol, lista);
+    mostrarLista(lista);
     return 0;
 }
 
@@ -104,8 +124,9 @@ nodoArbol* insertar(nodoArbol* arbol, persona dato)
 persona crearPersona()
 {
     persona aux;
+    printf("INGRESE LEGAJO: \n");
+    scanf("%i", &aux.legajo);
     printf("INGRESE EDAD: \n");
-    fflush(stdin);
     scanf("%i", &aux.edad);
     return aux;
 }
@@ -185,4 +206,73 @@ int buscar(nodoArbol* arbol, int edad)
         }
     }
     return i;
+}
+
+nodo* inicLista()
+{
+    return NULL;
+}
+
+nodo* crearNodo(persona dato)
+{
+    nodo* nuevo = (nodo*)malloc(sizeof(nodo));
+    nuevo->dato = dato;
+    nuevo->sig = NULL;
+    return nuevo;
+}
+
+nodo* agregarPpio(nodo* lista, nodo* nuevo)
+{
+    if(lista)
+    {
+        nuevo->sig = lista;
+    }
+    lista = nuevo;
+    return lista;
+}
+
+nodo* agregarFinal(nodo* lista, nodo* nuevo)
+{
+    nodo* aux = lista;
+    if(aux)
+    {
+        while(aux->sig)
+        {
+            aux = aux->sig;
+        }
+        aux->sig = nuevo;
+    }
+    else{
+        lista = nuevo;
+    }
+
+    return lista;
+}
+
+nodo* pasarALista(nodoArbol* arbol, nodo* lista)
+{
+    nodo* nodoAux;
+    nodoArbol* aux = arbol;
+    if(aux)
+    {
+        lista = pasarALista(aux->izq, lista);
+        nodoAux = crearNodo(arbol->dato);
+        lista = agregarFinal(lista, nodoAux);
+        lista = pasarALista(aux->der, lista);
+    }
+    return lista;
+}
+
+void mostrarLista(nodo* lista)
+{
+    printf("\n");
+    while(lista)
+    {
+        printf("| %d |",lista->dato.edad);
+        if(lista->sig){
+            printf(" -> ");
+        }
+        lista = lista->sig;
+    }
+    printf("\n");
 }
