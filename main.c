@@ -37,6 +37,7 @@ nodo* agregarFinal(nodo* lista, nodo* nuevo);
 nodo* pasarALista(nodoArbol* arbol, nodo* lista);
 
 persona crearPersona();
+void mostrarPersona(persona personita);
 void mostrarArbolInOrder(nodoArbol* arbol);
 void mostrarArbolPreOrder(nodoArbol* arbol);
 void mostrarArbolPostOrder(nodoArbol* arbol);
@@ -84,6 +85,9 @@ int main()
     //PUNTO 3
     lista = pasarALista(arbol, lista);
     mostrarLista(lista);
+
+    //PUNTO 4
+
     return 0;
 }
 
@@ -124,10 +128,16 @@ nodoArbol* insertar(nodoArbol* arbol, persona dato)
 persona crearPersona()
 {
     persona aux;
-    printf("INGRESE LEGAJO: \n");
-    scanf("%i", &aux.legajo);
+    printf("INGRESE NOMBRE: \n");
+    fflush(stdin);
+    gets(aux.nombre);
+
     printf("INGRESE EDAD: \n");
     scanf("%i", &aux.edad);
+
+    printf("INGRESE LEGAJO: \n");
+    scanf("%i", &aux.legajo);
+
     return aux;
 }
 
@@ -136,7 +146,7 @@ void mostrarArbolInOrder(nodoArbol* arbol)
     if (arbol != NULL)
     {
         mostrarArbolInOrder(arbol->izq);
-        printf("| %i |", arbol->dato.edad);
+        mostrarPersona(arbol->dato);
         mostrarArbolInOrder(arbol->der);
     }
 }
@@ -145,7 +155,7 @@ void mostrarArbolPreOrder(nodoArbol* arbol)
 {
     if (arbol != NULL)
     {
-        printf("| %i |", arbol->dato.edad);
+        mostrarPersona(arbol->dato);
         mostrarArbolPreOrder(arbol->izq);
         mostrarArbolPreOrder(arbol->der);
     }
@@ -157,7 +167,7 @@ void mostrarArbolPostOrder(nodoArbol* arbol)
     {
         mostrarArbolPostOrder(arbol->izq);
         mostrarArbolPostOrder(arbol->der);
-        printf("| %i |", arbol->dato.edad);
+        mostrarPersona(arbol->dato);
     }
 }
 
@@ -242,7 +252,8 @@ nodo* agregarFinal(nodo* lista, nodo* nuevo)
         }
         aux->sig = nuevo;
     }
-    else{
+    else
+    {
         lista = nuevo;
     }
 
@@ -269,10 +280,19 @@ void mostrarLista(nodo* lista)
     while(lista)
     {
         printf("| %d |",lista->dato.edad);
-        if(lista->sig){
+        if(lista->sig)
+        {
             printf(" -> ");
         }
         lista = lista->sig;
     }
     printf("\n");
+}
+
+void mostrarPersona(persona personita)
+{
+    printf("NOMBRE: %s\n", personita.nombre);
+    printf("EDAD: %i\n", personita.edad);
+    printf("LEGAJO: %i\n\n", personita.legajo);
+
 }
