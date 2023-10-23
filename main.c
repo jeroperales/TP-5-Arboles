@@ -53,6 +53,7 @@ int calculaAltura(nodoArbol* arbol);
 int main()
 {
     int terminales = 0;
+    int i = 0;
     int grado1 = 0;
     int flag = 0;
     int edad = 0;
@@ -78,9 +79,8 @@ int main()
     //PUNTO 2
     mostrarArbolInOrder(arbol);
 
-    /*terminales = contarTerminal(arbol);
-    printf("\n\nTERMINALES: | %i |", terminales);
 
+/*
     grado1 = contarGrado1(arbol);
     printf("\n\nNODOS GRADO 1: | %i |", grado1);
 
@@ -126,6 +126,13 @@ int main()
     {
         printf("DICHO NOMBRE NO SE ENCUENTRA DENTRO DEL ARBOL\n");
     }
+
+    i = contarNodo(arbol, i);
+    printf("\n\n%i", i);
+
+  // PUNTO 8
+    /*terminales = contarTerminal(arbol);
+    printf("\n\nTERMINALES: | %i |", terminales);*/
     return 0;
 }
 
@@ -366,4 +373,13 @@ nodoArbol* buscaNombre(nodoArbol* arbol, char nombre[], nodoArbol* aux)
     return aux;
 }
 
-
+int contarNodo(nodoArbol* arbol, int i)
+{
+    if (arbol != NULL)
+    {
+        i++;
+        i = contarNodo(arbol->izq, i);
+        i = contarNodo(arbol->der, i);
+    }
+    return i;
+}
