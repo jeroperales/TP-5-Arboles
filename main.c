@@ -45,6 +45,10 @@ void mostrarLista(nodo* lista);
 int contarTerminal(nodoArbol* arbol);
 int contarGrado1(nodoArbol* arbol);
 int buscar(nodoArbol* arbol, int edad);
+nodoArbol* buscaLegajo(nodoArbol* arbol, int legajo, nodoArbol* aux);
+nodoArbol* buscaNombre(nodoArbol* arbol, char nombre[], nodoArbol* aux);
+int calculaAltura(nodoArbol* arbol);
+
 
 int main()
 {
@@ -52,8 +56,12 @@ int main()
     int grado1 = 0;
     int flag = 0;
     int edad = 0;
+    int legajo = 0;
     char opc = 's';
+    char nombre[20];
     nodoArbol* arbol = inicArbol();
+    nodoArbol* aux = inicArbol();
+    nodoArbol* aux2 = inicArbol();
     nodo* lista = inicLista();
     persona personita;
 
@@ -84,10 +92,40 @@ int main()
 
     //PUNTO 3
     lista = pasarALista(arbol, lista);
+    printf("LISTA SIMPLE: \n");
     mostrarLista(lista);
 
     //PUNTO 4
+    printf("INGRESE LEGAJO A BUSCAR \n");
+    scanf("%i", &legajo);
+    aux = buscaLegajo(arbol, legajo, aux);
 
+    if(aux != NULL)
+    {
+        printf("\nNODO DE DICHO LEGAJO: \n");
+        mostrarPersona(aux->dato);
+    }
+    else
+    {
+
+        printf("DICHO LEGAJO NO SE ENCUENTRA DENTRO DEL ARBOL\n");
+    }
+
+    //PUNTO 5
+    printf("INGRESE NOMBRE A BUSCAR \n");
+    fflush(stdin);
+    gets(nombre);
+
+    aux2 = buscaNombre(arbol, nombre, aux2);
+    if (aux2 != NULL)
+    {
+        printf("\nNODO DE DICHO NOMBRE: \n");
+        mostrarPersona(aux2->dato);
+    }
+    else
+    {
+        printf("DICHO NOMBRE NO SE ENCUENTRA DENTRO DEL ARBOL\n");
+    }
     return 0;
 }
 
@@ -296,3 +334,36 @@ void mostrarPersona(persona personita)
     printf("LEGAJO: %i\n\n", personita.legajo);
 
 }
+
+nodoArbol* buscaLegajo(nodoArbol* arbol, int legajo, nodoArbol* aux)
+{
+    if(arbol)
+    {
+        aux = buscaLegajo(arbol->izq, legajo, aux);
+        aux = buscaLegajo(arbol->der, legajo, aux);
+
+        if (arbol->dato.legajo == legajo)
+        {
+            aux = arbol;
+        }
+    }
+    return aux;
+}
+
+nodoArbol* buscaNombre(nodoArbol* arbol, char nombre[], nodoArbol* aux)
+{
+    if(arbol)
+    {
+        aux = buscaNombre(arbol->izq, nombre, aux);
+        aux = buscaNombre(arbol->der, nombre, aux);
+
+        if(strcmp(nombre, arbol->dato.nombre) == 0)
+        {
+            aux = arbol;
+        }
+    }
+
+    return aux;
+}
+
+
