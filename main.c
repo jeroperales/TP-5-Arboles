@@ -31,6 +31,11 @@ nodoArbol* crearNodoArbol(persona dato);
 nodoArbol* insertar(nodoArbol* arbol, persona dato);
 nodoArbol* buscaLegajo(nodoArbol* arbol, int legajo, nodoArbol* aux);
 nodoArbol* buscaNombre(nodoArbol* arbol, char nombre[], nodoArbol* aux);
+
+nodoArbol* borrar(nodoArbol* arbol, int dato);
+nodoArbol* nodoMasDerecha(nodoArbol* arbol);
+nodoArbol* nodoMasIzquierda(nodoArbol* arbol);
+
 int contarTerminal(nodoArbol* arbol);
 int contarGrado1(nodoArbol* arbol);
 int buscar(nodoArbol* arbol, int edad);
@@ -61,6 +66,7 @@ int main()
     int edad = 0;
     int legajo = 0;
     int altura = 0;
+    int dato = 0;
     char opc = 's';
     char nombre[20];
     nodoArbol* arbol = inicArbol();
@@ -80,18 +86,18 @@ int main()
     }
 
     //PUNTO 2 CONTAR NODOS DE GRADOS 1
+    printf("\n");
     mostrarArbolInOrder(arbol);
 
 
-    /*
-        grado1 = contarGrado1(arbol);
-        printf("\n\nNODOS GRADO 1: | %i |", grado1);
+    grado1 = contarGrado1(arbol);
+    printf("\n\nNODOS GRADO 1: | %i |", grado1);
 
-        printf("\n\nINGRESE EDAD A BUSCAR\n");
-        scanf("%i", &edad);
+    printf("\n\nINGRESE EDAD A BUSCAR\n");
+    scanf("%i", &edad);
 
-        flag = buscar(arbol, edad);
-        printf("\nFLAG = %d", flag);*/
+    flag = buscar(arbol, edad);
+    printf("\nFLAG = %d", flag);
 
     //PUNTO 3 PASAR DE ARBOL A LISTA SIMPLE
     lista = pasarALista(arbol, lista);
@@ -141,10 +147,19 @@ int main()
     printf("\nCANTIDAD DE NODOS EN ARBOL: %i\n", i);
 
     // PUNTO 8 CONTAR TERMINALES
-    /*terminales = contarTerminal(arbol);
-    printf("\n\nTERMINALES: | %i |", terminales);*/
+    terminales = contarTerminal(arbol);
+    printf("\n\nTERMINALES: | %i |", terminales);
+
 
     //PUNTO 9 BORRAR NODO DE ARBOL
+    printf("INGRESE NUMERO QUE DESEA BORRAR:  ");
+    scanf("%i", &dato);
+
+    arbol = borrar(arbol, dato);
+
+    printf("\n ARBOL SIN DICHA EDAD:\n ");
+    mostrarArbolInOrder(arbol);
+
     return 0;
 }
 
@@ -424,3 +439,66 @@ int calculaAltura(nodoArbol* arbol)
     return i;
 }
 
+nodoArbol* borrar(nodoArbol* arbol, int dato)
+{
+    if(arbol)
+    {
+        if(arbol->dato.edad == dato)
+        {
+            if(arbol->izq)
+            {
+                nodoArbol* masDer = nodoMasDerecha(arbol->izq);
+                arbol->dato = masDer->dato;
+                arbol->izq = borrar(arbol->izq, masDer->dato.edad);
+            }
+            else if(arbol->der)
+            {
+                nodoArbol* masIzq = nodoMasIzquierda(arbol->der);
+                arbol->dato = masIzq->dato;
+                arbol->der = borrar(arbol->der, masIzq->dato.edad);
+            }
+            else
+            {
+                free(arbol);
+                arbol = NULL;
+            }
+        }
+        else if(dato > arbol->dato.edad)
+        {
+            arbol->der=borrar(arbol->der, dato);
+        }
+        else if(dato < arbol->dato.edad)
+        {
+            arbol->izq = borrar(arbol->izq, dato);
+        }
+
+
+    }
+
+    return arbol;
+}
+
+nodoArbol* nodoMasDerecha(nodoArbol* arbol)
+{
+    if(arbol)
+    {
+        if(arbol->der)
+        {
+            nodoMasDerecha(arbol->der);
+        }
+    }
+    return arbol;
+}
+
+nodoArbol* nodoMasIzquierda(nodoArbol* arbol)
+{
+
+    if(arbol)
+    {
+        if(arbol->izq)
+        {
+            nodoMasIzquierda(arbol->izq);
+        }
+    }
+    return arbol;
+}
